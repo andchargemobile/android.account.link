@@ -1,0 +1,3 @@
+include ':andcharge'
+include ':app'
+rootProject.name = "CoolMobilityProvider"
