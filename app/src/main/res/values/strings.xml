@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">CoolMobilityProvider</string>
+    <string name="main_error">Error: %1$s</string>
 </resources>

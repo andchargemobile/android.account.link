@@ -1,0 +1,16 @@
+<resources>
+    <string name="content_desc_result_dialog_close">Close dialog</string>
+    <string name="content_desc_result_dialog_image">&amp;Charge logo</string>
+
+    <string name="connect_partner_result_success">Congratulations, you have linked your account with &amp;Charge!</string>
+    <string name="connect_partner_result_missing_ok">The result url is missing the parameter "ok"…</string>
+    <string name="connect_partner_result_missing_error">The result url is missing the parameter "error"…</string>
+
+    <string name="connect_partner_result_param_not_set">Your request was missing a mandatory parameter. Please check the URL.</string>
+    <string name="connect_partner_result_linked_to_different">The given user is already linked to another &amp;Charge account.</string>
+    <string name="connect_partner_result_partner_not_found">No partner found for the given partnerId.</string>
+    <string name="connect_partner_result_general_processing">Something went wrong on our side. Please get in touch with us, we\'ll have a look into it.</string>
+    <string name="connect_partner_result_authorization_invalid">Something went wrong while authenticating.</string>
+    <string name="connect_partner_result_activation_code_not_found">We did not recognize the activation code you gave us in the URL.</string>
+    <string name="connect_partner_result_no_code">Something went wrong within the app. Please get in touch with us, we\'ll have a look into it.</string>
+</resources>
