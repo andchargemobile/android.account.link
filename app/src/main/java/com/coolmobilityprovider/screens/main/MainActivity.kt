@@ -13,7 +13,31 @@ import com.r.andcharge.dialog.AccountLinkResultDialog
 
 
 /**
- * Represents the screen where you link your user with &Charge
+ * Represents the screen where you link your user with &Charge.
+ * Shows the usage in a sample mvvm project
+ *
+ *
+
+How to set up:
+
+    redefine the callback url scheme & host strings in your ids.xml or strings.xml to fit your requirements
+        <string name="andcharge_callback_scheme" translatable="false">mp</string>
+        <string name="andcharge_callback_host" translatable="false">and-charge</string>
+
+    In the manifest, your activity should have an intent filter with this data element
+        <data android:scheme="@string/andcharge_callback_scheme"
+        android:host="@string/andcharge_callback_host" />
+
+
+How account linking works:
+
+    1) Call your backend to initiate the account link
+    2) Pass the result to &Charge by executing the CompleteAccountLinkCommand
+    3) &Charge will try to complete the account linking
+    4) &Charge will open this app with the callback url defined in your strings with extra params
+    5) Use AndChargeCallbackUrlParser to convert Intent -> AccountLinkResult
+    6) Show AccountLinkResult, for example by showing AccountLinkResultDialog
+
  *
  * Author: romanvysotsky
  * Created: 03.07.20
