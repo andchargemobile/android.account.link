@@ -7,10 +7,12 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentManager
 import com.r.andcharge.R
-import com.r.andcharge.util.CallbackUrlParser
+import com.r.andcharge.model.AccountLinkResult
 
 /**
+ * A simple dialog showing the &Charge logo and the text from AccountLinkResult
  *
  * Author: romanvysotsky
  * Created: 03.07.20
@@ -18,22 +20,17 @@ import com.r.andcharge.util.CallbackUrlParser
 
 class AccountLinkResultDialog : DialogFragment() {
 
+
     companion object {
-        private const val URL_KEY = "callbackUrl"
+        private const val RESULT_KEY = "AccountLinkResult"
         private const val DIM_AMOUNT = 0.85f
-    }
 
-    private val callbackUrlParser: CallbackUrlParser = CallbackUrlParser()
+        fun createAndShow(fragmentManager: FragmentManager, result: AccountLinkResult) {
+            val accountLinkResultDialog = AccountLinkResultDialog()
+            accountLinkResultDialog.setAccountLinkResult(result)
+            accountLinkResultDialog.show(fragmentManager, AccountLinkResultDialog::class.java.name)
+        }
 
-
-    fun setCallbackUrl(callbackUrl: String) {
-        val bundle = Bundle()
-        bundle.putString(URL_KEY, callbackUrl)
-        arguments = bundle
-    }
-
-    fun getCallbackUrl(): String {
-        return arguments?.getString(URL_KEY) ?: ""
     }
 
 
@@ -43,9 +40,10 @@ class AccountLinkResultDialog : DialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        val view = inflater.inflate(R.layout.dialog_account_link_result, null)
-        showResult(view)
-        handleClickEvents(view)
+        val view = inflater.inflate(R.layout.dialog_account_link_result, container)
+        showAccountLinkResult(view)
+        showCloseButton(view)
+
         return view
     }
 
@@ -66,18 +64,33 @@ class AccountLinkResultDialog : DialogFragment() {
     }
 
 
-    private fun showResult(rootView: View) {
-        val txtResult = rootView.findViewById<TextView>(R.id.txt_result)
-        val callbackUrl = getCallbackUrl()
-        val status = callbackUrlParser.getAccountLinkStatusFor(callbackUrl)
+    private fun showAccountLinkResult(rootView: View) {
+        val result = getAccountLinkResult()
+        if(result == null) {
+            dismiss()
+            return
+        }
 
-        txtResult.text = rootView.context.getString(status.textResourceId)
+        val txtResult = rootView.findViewById<TextView>(R.id.txt_result)
+        txtResult.text = rootView.context.getString(result.textResourceId)
     }
 
-    private fun handleClickEvents(rootView: View) {
+    private fun showCloseButton(rootView: View) {
         val imgClose = rootView.findViewById<ImageView>(R.id.img_close_icon)
         imgClose.setOnClickListener { dismiss() }
     }
 
+
+
+    private fun setAccountLinkResult(result: AccountLinkResult) {
+        val bundle = Bundle()
+        bundle.putSerializable(RESULT_KEY, result)
+        arguments = bundle
+    }
+
+    private fun getAccountLinkResult(): AccountLinkResult? {
+        val result = arguments?.getSerializable(RESULT_KEY)
+        return if(result is AccountLinkResult) result else null
+    }
 
 }

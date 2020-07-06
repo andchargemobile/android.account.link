@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.coolmobilityprovider.R
 import com.coolmobilityprovider.databinding.ActivityMainBinding
+import com.r.andcharge.dialog.AccountLinkResultDialog
 
 
 /**
@@ -20,7 +21,7 @@ import com.coolmobilityprovider.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-    private val viewModel: MainViewModel by viewModels()
+    private val viewModel: MainViewModel by viewModels { MainViewModel.Factory(intent) }
     private var dataBinding: ActivityMainBinding? = null
 
 
@@ -28,7 +29,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         initDataBinding()
-        checkForDeepLink()
 
         listenToOnError()
         listenToAccountLinkComplete()
@@ -41,21 +41,14 @@ class MainActivity : AppCompatActivity() {
         dataBinding?.lifecycleOwner = this
     }
 
-    /*
-     *
-     */
-    private fun checkForDeepLink() {
-        val callbackUrl: String? = intent?.data?.toString()
-        if(callbackUrl != null) viewModel.onLinkAccountResultAvailable(callbackUrl)
-    }
 
     /*
-     * Execute the command
+     * Show the AccountLinkResult. For example by showing the AccountLinkResultDialog
      */
     private fun listenToAccountLinkShowResult() {
 
-        viewModel.accountLinkShowResult.observe(this, Observer {
-            it?.execute(this)
+        viewModel.accountLinkResult.observe(this, Observer {
+            if(it != null) AccountLinkResultDialog.createAndShow(supportFragmentManager, it)
         })
     }
 
@@ -64,7 +57,7 @@ class MainActivity : AppCompatActivity() {
      */
     private fun listenToAccountLinkComplete() {
 
-        viewModel.accountLinkComplete.observe(this, Observer {
+        viewModel.accountLinkInitiated.observe(this, Observer {
             try {
                 it?.execute(this)
             } catch (e: ActivityNotFoundException) {
@@ -74,7 +67,6 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-
     /*
      * Handle errors however
      */
@@ -83,6 +75,7 @@ class MainActivity : AppCompatActivity() {
             if(it != null) showError(it)
         })
     }
+
 
     private fun showError(error: Throwable) {
         val errorAsString = error.javaClass.simpleName + (error.message ?: "")

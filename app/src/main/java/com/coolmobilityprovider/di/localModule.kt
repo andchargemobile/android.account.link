@@ -1,5 +1,6 @@
 package com.coolmobilityprovider.di
 
+import com.r.andcharge.util.AndChargeCallbackUrlParser
 import org.koin.dsl.module
 
 /**
@@ -9,5 +10,7 @@ import org.koin.dsl.module
  */
 
 val localModule = module {
+
+    single { AndChargeCallbackUrlParser.createInstance(get()) }
 
 }

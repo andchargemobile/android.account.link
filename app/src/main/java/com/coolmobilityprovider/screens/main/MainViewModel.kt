@@ -1,12 +1,16 @@
 package com.coolmobilityprovider.screens.main
 
+import android.content.Intent
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.coolmobilityprovider.base.BaseViewModel
 import com.coolmobilityprovider.base.SingleLiveEvent
 import com.coolmobilityprovider.base.launch
 import com.coolmobilityprovider.repository.CoolRepository
-import com.r.andcharge.command.AccountLinkCompleteCommand
-import com.r.andcharge.command.AccountLinkResultCommand
+import com.r.andcharge.command.CompleteAccountLinkCommand
+import com.r.andcharge.model.AccountLinkResult
 import com.r.andcharge.model.InitiateAccountLinkResponse
+import com.r.andcharge.util.AndChargeCallbackUrlParser
 import org.koin.core.inject
 
 /**
@@ -16,31 +20,32 @@ import org.koin.core.inject
  * Created: 03.07.20
  */
 
-class MainViewModel : BaseViewModel() {
+class MainViewModel(callbackUrlResult: String?) : BaseViewModel() {
 
-    val accountLinkComplete: SingleLiveEvent<AccountLinkCompleteCommand> = SingleLiveEvent()
-    val accountLinkShowResult: SingleLiveEvent<AccountLinkResultCommand> = SingleLiveEvent()
-
+    val accountLinkInitiated: SingleLiveEvent<CompleteAccountLinkCommand> = SingleLiveEvent()
+    val accountLinkResult: SingleLiveEvent<AccountLinkResult> = SingleLiveEvent()
     val onError: SingleLiveEvent<Throwable> = SingleLiveEvent()
 
-
     private val coolRepository: CoolRepository by inject()
+    private val callbackUrlParser: AndChargeCallbackUrlParser by inject()
 
 
     /*
-     * After AccountLinkCommand is executed and &Charge completed account linking, it will deep link
-     * into your app with the provided callbackUrl. It will have additional query parameters attached.
-     * AccountLinkResultCommand will open a dialog which will parse and present the result
+     * parse the callback url from the intent data to an AccountLinkResult with AndChargeCallbackUrlParser
      */
-    fun onLinkAccountResultAvailable(callbackUrl: String) {
-        val command = AccountLinkResultCommand(callbackUrl)
-        accountLinkShowResult.postValue(command)
+    init {
+
+        val result = callbackUrlParser.getAccountLinkResultOrNull(callbackUrlResult)
+        if(result != null) {
+            accountLinkResult.postValue(result)
+        }
     }
 
+
     /*
-     * When a user wants to link accounts, call your backend so it does the account linking
+     * When a user wants to link accounts, call your repository so it initiates the account linking
      */
-    fun onLinkAccountClicked() {
+    fun onInitiateAccountLinkClicked() {
 
         launch(
             coolRepository.initiateAndChargeAccountLink(),
@@ -50,11 +55,11 @@ class MainViewModel : BaseViewModel() {
     }
 
     /*
-     * With the response of your backend, create an instance of OpenAndChargeCommand
+     * With the response of your repository, create an instance of OpenAndChargeCommand
      */
     private fun accountLinkCallSuccess(response: InitiateAccountLinkResponse) {
-        val command = AccountLinkCompleteCommand(response)
-        accountLinkComplete.postValue(command)
+        val command = CompleteAccountLinkCommand(response)
+        accountLinkInitiated.postValue(command)
     }
 
     /*
@@ -62,6 +67,21 @@ class MainViewModel : BaseViewModel() {
      */
     private fun accountLinkCallFail(error: Throwable) {
         onError.postValue(error)
+    }
+
+
+
+    class Factory(private val intent: Intent?) : ViewModelProvider.Factory {
+
+        /*
+         * After AccountLinkCommand is executed and &Charge completed account linking, it will deep link
+         * into your app with the provided callbackUrl. The url will have additional query parameters attached
+         */
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            return MainViewModel(intent?.data?.toString()) as T
+        }
+
     }
 
 }

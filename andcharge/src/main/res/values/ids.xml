@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="url_andcharge_accountlink" translatable="false">https://www.and-charge.com/#/confirmAccountLink?activationCode=%1$s&amp;partnerId=%2$s&amp;partnerUserId=%3$s&amp;callbackUrl=%4$s</string>
+
+    <!-- the library provides these default strings for the callback url.
+    To use custom values here you can redefine them in your ids.xml -->
+    <string name="andcharge_callback_scheme" translatable="false">mp</string>
+    <string name="andcharge_callback_host" translatable="false">and-charge</string>
+
 </resources>

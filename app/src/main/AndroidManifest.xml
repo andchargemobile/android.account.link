@@ -24,8 +24,10 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
 
-                <data android:scheme="coolmp"
-                    android:host="and-charge-callback" />
+                <!-- make sure to use these string resources for scheme and host.
+                You can redefine them in your ids.xml -->
+                <data android:scheme="@string/andcharge_callback_scheme"
+                    android:host="@string/andcharge_callback_host" />
 
             </intent-filter>
 

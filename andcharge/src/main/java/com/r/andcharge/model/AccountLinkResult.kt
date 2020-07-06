@@ -3,13 +3,13 @@ package com.r.andcharge.model
 import com.r.andcharge.R
 
 /**
- * enum representing all states which can occur when completing an initiated account link
+ * enum representing all states which can occur after completing an initiated account link
  *
  * Author: romanvysotsky
  * Created: 03.07.20
  */
 
-enum class AccountLinkStatus(val textResourceId: Int) {
+enum class AccountLinkResult(val textResourceId: Int) {
 
     SUCCESS(R.string.connect_partner_result_success),
     MISSING_OK_PARAM(R.string.connect_partner_result_missing_ok),

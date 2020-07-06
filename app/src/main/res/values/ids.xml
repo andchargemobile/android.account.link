@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- you can redefine the scheme & host here like that to fit your requirements -->
+    <string name="andcharge_callback_scheme" translatable="false">mycoolmp</string>
+    <string name="andcharge_callback_host" translatable="false">my-and-charge-callback</string>
+
+</resources>

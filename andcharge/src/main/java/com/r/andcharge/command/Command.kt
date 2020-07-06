@@ -1,6 +1,6 @@
 package com.r.andcharge.command
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Context
 
 /**
  *
@@ -10,6 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 
 interface Command {
 
-    fun execute(context: AppCompatActivity)
+    fun execute(context: Context)
 
 }

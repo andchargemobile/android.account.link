@@ -18,11 +18,7 @@ class CoolRepositoryImpl: CoolRepository {
      * Normally this should call your backend, and you can create an InitiateAccountLinkResponse.
      * You will also need those additional values:
      *
-     * PartnerId: Maybe it's a constant in your project, maybe your backend will deliver it on this call
-     * CallbackUrl: As &Charge will try to deep link into your app, this should be constant for the project
-     *              and you should define an intent filter for it in the manifest.
-     *              Example: coolmp://and-charge-callback
-     *
+     * 1) PartnerId: Maybe it's a constant in your project, maybe your backend will deliver it on this call
      *
      * POST https://api.and-charge.com/v1/partners/{partnerId}/accounts?userId={UserId}
      * Accept: application/json
@@ -35,11 +31,9 @@ class CoolRepositoryImpl: CoolRepository {
     override fun initiateAndChargeAccountLink(): Flow<InitiateAccountLinkResponse> = flow {
 
         val partnerId = "PID001"
-        val callbackUrl = "coolmp://and-charge-callback"
 
         val response = InitiateAccountLinkResponse(
             partnerId,
-            callbackUrl,
             "puid1",
             "code1",
             "INITIAL"
