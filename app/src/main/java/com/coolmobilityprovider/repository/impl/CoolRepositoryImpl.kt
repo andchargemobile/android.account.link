@@ -1,9 +1,12 @@
 package com.coolmobilityprovider.repository.impl
 
 import com.coolmobilityprovider.repository.CoolRepository
+import com.coolmobilityprovider.repository.LocalRepository
 import com.r.andcharge.model.InitiateAccountLinkResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 /**
  * represents your backend
@@ -12,7 +15,7 @@ import kotlinx.coroutines.flow.flow
  * Created: 03.07.20
  */
 
-class CoolRepositoryImpl: CoolRepository {
+class CoolRepositoryImpl: CoolRepository, KoinComponent {
 
     /*
      * Normally this should call your backend, and you can create an InitiateAccountLinkResponse.
@@ -28,15 +31,22 @@ class CoolRepositoryImpl: CoolRepository {
      * also check https://github.com/charge-partners/charge-and-partners/blob/master/link_partner_account.md#removing-an-account-link
      */
 
+
+    private val localRepository: LocalRepository by inject()
+
+
     override fun initiateAndChargeAccountLink(): Flow<InitiateAccountLinkResponse> = flow {
 
-        val partnerId = "PID001"
+        val partnerId = localRepository.retrieve("partnerId") ?: "partnerId"
+        val partnerUserId = localRepository.retrieve("partnerUserId") ?: "partnerUserId"
+        val activationCode = localRepository.retrieve("activationCode") ?: "activationCode"
+        val status = localRepository.retrieve("status") ?: "status"
 
         val response = InitiateAccountLinkResponse(
             partnerId,
-            "puid1",
-            "code1",
-            "INITIAL"
+            partnerUserId,
+            activationCode,
+            status
         )
 
         emit(response)

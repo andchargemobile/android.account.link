@@ -38,6 +38,8 @@ How account linking works:
     5) Use AndChargeCallbackUrlParser to convert Intent -> AccountLinkResult
     6) Show AccountLinkResult, for example by showing AccountLinkResultDialog
 
+check for details: https://github.com/charge-partners/charge-and-partners/blob/master/link_partner_account.md
+
  *
  * Author: romanvysotsky
  * Created: 03.07.20

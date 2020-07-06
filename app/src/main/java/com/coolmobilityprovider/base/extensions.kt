@@ -4,6 +4,8 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 /**
  *
@@ -23,4 +25,10 @@ fun <T> BaseViewModel.launch(
         .onEach { onSuccess(it) }
         .catch { onError(it) }
         .launchIn(viewModelScope)
+}
+
+inline fun <reified T> getKoinInstance(): T {
+    return object : KoinComponent {
+        val value: T by inject()
+    }.value
 }
