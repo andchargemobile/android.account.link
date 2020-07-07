@@ -24,6 +24,7 @@ How to set up:
     redefine the callback url scheme & host strings in your ids.xml or strings.xml to fit your requirements
         <string name="andcharge_callback_scheme" translatable="false">mp</string>
         <string name="andcharge_callback_host" translatable="false">and-charge</string>
+        <string name="andcharge_callback_path" translatable="false" />
 
     In the manifest, your activity should have an intent filter with this data element
         <data android:scheme="@string/andcharge_callback_scheme"
@@ -33,10 +34,10 @@ How to set up:
 How account linking works:
 
     1) Call your backend to initiate the account link
-    2) Pass the result to &Charge by executing the CompleteAccountLinkCommand
+    2) From that use AndChargeUrlParser to get the &Charge deep link, pass it to OpenAndChargeLinkCommand
     3) &Charge will try to complete the account linking
     4) &Charge will open this app with the callback url defined in your strings with extra params
-    5) Use AndChargeCallbackUrlParser to convert Intent -> AccountLinkResult
+    5) Use AndChargeUrlParser to convert Intent -> AccountLinkResult
     6) Show AccountLinkResult, for example by showing AccountLinkResultDialog
 
 check for details: https://github.com/charge-partners/charge-and-partners/blob/master/link_partner_account.md
