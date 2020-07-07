@@ -1,6 +1,7 @@
 package com.coolmobilityprovider.screens.main
 
 import android.content.ActivityNotFoundException
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
@@ -60,6 +61,15 @@ class MainActivity : AppCompatActivity() {
         listenToAccountLinkComplete()
         listenToAccountLinkShowResult()
     }
+
+    /*
+    handle new intents in case of launchMode=singleTask by passing the intent data string
+     */
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        viewModel.onNewIntent(intent?.data?.toString())
+    }
+
 
     private fun initDataBinding() {
         dataBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)

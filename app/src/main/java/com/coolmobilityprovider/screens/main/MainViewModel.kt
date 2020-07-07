@@ -22,8 +22,9 @@ import org.koin.core.inject
  * Created: 03.07.20
  */
 
-class MainViewModel(val callbackUrlResult: String?) : BaseViewModel() {
+class MainViewModel : BaseViewModel() {
 
+    val callbackUrlResult: MutableLiveData<String> = MutableLiveData()
     val updateAndChargeAccountLinkUrl: MutableLiveData<Unit> = MutableLiveData(Unit)
 
     val accountLinkInitiated: SingleLiveEvent<Command> = SingleLiveEvent()
@@ -37,11 +38,12 @@ class MainViewModel(val callbackUrlResult: String?) : BaseViewModel() {
     /*
      * parse the callback url from the intent data to an AccountLinkResult with AndChargeCallbackUrlParser
      */
-    init {
+    fun onNewIntent(intentData: String?) {
+        callbackUrlResult.postValue(intentData)
 
-        val result = urlParser.parseCallbackUrl(callbackUrlResult)
-        if(result != null) {
-            accountLinkResult.postValue(result)
+        val accountLinkResult = urlParser.parseCallbackUrl(intentData)
+        if(accountLinkResult != null) {
+            this.accountLinkResult.postValue(accountLinkResult)
         }
     }
 
@@ -87,9 +89,15 @@ class MainViewModel(val callbackUrlResult: String?) : BaseViewModel() {
 
     class Factory(private val intent: Intent?) : ViewModelProvider.Factory {
 
+        /*
+        handle the initial intent which the view received
+         */
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            return MainViewModel(intent?.data?.toString()) as T
+            val viewModel = MainViewModel()
+            val callbackUrl = intent?.data?.toString()
+            viewModel.onNewIntent(callbackUrl)
+            return viewModel as T
         }
 
     }
