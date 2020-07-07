@@ -2,14 +2,13 @@ package com.coolmobilityprovider.bindingadapters
 
 import android.text.Editable
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.Spinner
+import android.widget.*
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.BindingAdapter
 import com.coolmobilityprovider.base.getKoinInstance
 import com.coolmobilityprovider.repository.LocalRepository
+import com.coolmobilityprovider.repository.createInitiateAccountLinkResponseFromLocalValues
+import com.r.andcharge.util.AndChargeUrlParser
 
 /**
  *
@@ -34,6 +33,20 @@ fun bindTextChanged(editText: EditText, listener: TextListener?) {
 }
 
 /*
+just a utility binding to show the account link url when the user changes the demo parameters
+ */
+@BindingAdapter("bindAccountLinkUrl")
+fun bindAccountLinkUrl(textView: TextView, unit: Unit) {
+
+    val localRepository = getKoinInstance<LocalRepository>()
+    val urlParser = getKoinInstance<AndChargeUrlParser>()
+
+    val pseudoResponse = localRepository.createInitiateAccountLinkResponseFromLocalValues()
+    val accountLinkUrl = urlParser.createAccountLinkUrl(pseudoResponse)
+    textView.text = accountLinkUrl
+}
+
+/*
 just a quick utility binding for syncing text with LocalRepository
  */
 @BindingAdapter("bindTextToLocalRepositoryKey")
@@ -51,7 +64,6 @@ fun bindTextToLocalRepositoryKey(editText: EditText, key: String?) {
         val value = it?.toString() ?: key
         localRepository.save(key, value)
     })
-
 }
 
 @BindingAdapter("bindStatusToLocalRepositoryKey")

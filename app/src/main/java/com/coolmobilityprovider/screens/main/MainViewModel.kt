@@ -1,6 +1,7 @@
 package com.coolmobilityprovider.screens.main
 
 import android.content.Intent
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.coolmobilityprovider.base.BaseViewModel
@@ -20,7 +21,9 @@ import org.koin.core.inject
  * Created: 03.07.20
  */
 
-class MainViewModel(callbackUrlResult: String?) : BaseViewModel() {
+class MainViewModel(val callbackUrlResult: String?) : BaseViewModel() {
+
+    val updateAndChargeAccountLinkUrl: MutableLiveData<Unit> = MutableLiveData(Unit)
 
     val accountLinkInitiated: SingleLiveEvent<OpenLinkCommand> = SingleLiveEvent()
     val accountLinkResult: SingleLiveEvent<AccountLinkResult> = SingleLiveEvent()
@@ -39,6 +42,14 @@ class MainViewModel(callbackUrlResult: String?) : BaseViewModel() {
         if(result != null) {
             accountLinkResult.postValue(result)
         }
+    }
+
+    /*
+    for demonstration purposes only; get the parameters from the edit texts and
+    show which url would be called when clicking the "LINK ACCOUNT" button
+     */
+    fun notifyAnyTextChanged() {
+        updateAndChargeAccountLinkUrl.postValue(Unit)
     }
 
 

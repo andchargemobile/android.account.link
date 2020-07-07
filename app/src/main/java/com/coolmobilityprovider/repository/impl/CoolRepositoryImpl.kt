@@ -2,6 +2,7 @@ package com.coolmobilityprovider.repository.impl
 
 import com.coolmobilityprovider.repository.CoolRepository
 import com.coolmobilityprovider.repository.LocalRepository
+import com.coolmobilityprovider.repository.createInitiateAccountLinkResponseFromLocalValues
 import com.r.andcharge.model.InitiateAccountLinkResponse
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -37,17 +38,8 @@ class CoolRepositoryImpl: CoolRepository, KoinComponent {
 
     override fun initiateAndChargeAccountLink(): Flow<InitiateAccountLinkResponse> = flow {
 
-        val partnerId = localRepository.retrieve("partnerId") ?: "partnerId"
-        val partnerUserId = localRepository.retrieve("partnerUserId") ?: "partnerUserId"
-        val activationCode = localRepository.retrieve("activationCode") ?: "activationCode"
-        val status = localRepository.retrieve("status") ?: "status"
-
-        val response = InitiateAccountLinkResponse(
-            partnerId,
-            partnerUserId,
-            activationCode,
-            status
-        )
+        val response = localRepository
+            .createInitiateAccountLinkResponseFromLocalValues()
 
         emit(response)
     }
