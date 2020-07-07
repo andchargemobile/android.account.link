@@ -2,7 +2,8 @@
 <resources>
 
     <!-- you can redefine the scheme & host here like that to fit your requirements -->
-    <string name="andcharge_callback_scheme" translatable="false">mycoolmp</string>
-    <string name="andcharge_callback_host" translatable="false">my-and-charge-callback</string>
+    <string name="andcharge_callback_scheme" translatable="false">coolmp</string>
+    <string name="andcharge_callback_host" translatable="false">and-charge</string>
+    <string name="andcharge_callback_path" translatable="false">/accountlink/callback</string>
 
 </resources>

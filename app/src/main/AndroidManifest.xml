@@ -27,7 +27,13 @@
                 <!-- make sure to use these string resources for scheme and host.
                 You can redefine them in your ids.xml -->
                 <data android:scheme="@string/andcharge_callback_scheme"
-                    android:host="@string/andcharge_callback_host" />
+                    android:host="@string/andcharge_callback_host"
+                    android:path="@string/andcharge_callback_path"/>
+
+                <!-- or if you dont use a concrete path:
+                    <data android:scheme="@string/andcharge_callback_scheme"
+                        android:host="@string/andcharge_callback_host" />
+                    -->
 
             </intent-filter>
 

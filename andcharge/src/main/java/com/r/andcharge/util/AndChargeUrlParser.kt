@@ -32,6 +32,7 @@ class AndChargeUrlParser(
 
     private val scheme = context.getString(R.string.andcharge_callback_scheme)
     private val host = context.getString(R.string.andcharge_callback_host)
+    private val path = context.getString(R.string.andcharge_callback_path)
 
 
     /*
@@ -41,7 +42,7 @@ class AndChargeUrlParser(
     */
     fun createAccountLinkUrl(response: InitiateAccountLinkResponse): String {
 
-        val callbackUrl = urlParser.encodeUtf8("$scheme://$host")
+        val callbackUrl = urlParser.encodeUtf8("$scheme://$host$path")
 
         return context.getString(
             R.string.url_andcharge_accountlink,
@@ -81,7 +82,8 @@ class AndChargeUrlParser(
 
 
     private fun isAndChargeConnectAccountCallbackUrl(callbackUrl: String): Boolean {
-        return callbackUrl.contains(scheme) && callbackUrl.contains(host)
+        return callbackUrl.contains(scheme)
+                && callbackUrl.contains(host)
     }
 
     private fun parseAccountLinkResult(callbackUrl: String): AccountLinkResult {

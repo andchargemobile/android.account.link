@@ -6,5 +6,6 @@
     To use custom values here you can redefine them in your ids.xml -->
     <string name="andcharge_callback_scheme" translatable="false">mp</string>
     <string name="andcharge_callback_host" translatable="false">and-charge</string>
+    <string name="andcharge_callback_path" translatable="false" />
 
 </resources>
