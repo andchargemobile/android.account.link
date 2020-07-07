@@ -21,6 +21,28 @@ enum class AccountLinkResult(val textResourceId: Int) {
     GENERAL_PROCESSING_FAILURE(R.string.connect_partner_result_general_processing),
     AUTHORIZATION_INVALID(R.string.connect_partner_result_authorization_invalid),
     ACTIVATION_CODE_NOT_FOUND(R.string.connect_partner_result_activation_code_not_found),
-    REFERENCED_OBJECT_NOT_FOUND(R.string.connect_partner_result_param_not_set),
+    REFERENCED_OBJECT_NOT_FOUND(R.string.connect_partner_result_param_not_set);
+
+
+    companion object {
+
+        fun errorValueOf(error: String?): AccountLinkResult {
+
+            for(result in values()) {
+                if(isLinkingError(result) && result.name.equals(error, true)) {
+                    return result
+                }
+            }
+
+            return MISSING_ERROR_PARAM
+        }
+
+        private fun isLinkingError(result: AccountLinkResult): Boolean {
+            return result != SUCCESS &&
+                    result != MISSING_OK_PARAM &&
+                    result != MISSING_ERROR_PARAM
+        }
+
+    }
 
 }

@@ -17,33 +17,31 @@ import com.r.andcharge.model.InitiateAccountLinkResponse
  */
 
 class AndChargeUrlParser(
-    private val urlParser: UrlParser,
-    private val context: Context
+    private val context: Context,
+    private val urlParser: UrlParser
 ) {
 
     companion object {
-
         fun createInstance(context: Context): AndChargeUrlParser {
-            val urlParser = UrlParser()
-            return AndChargeUrlParser(urlParser, context)
+            val urlParser = UrlParser.createInstance()
+            return AndChargeUrlParser(context, urlParser)
         }
-
     }
+
 
     private val scheme = context.getString(R.string.andcharge_callback_scheme)
     private val host = context.getString(R.string.andcharge_callback_host)
     private val path = context.getString(R.string.andcharge_callback_path)
+    private val callbackUrl = "$scheme://$host$path"
 
 
     /*
     returns a url string
-    which tells &Charge to complete an account link for the given parameters
+    which passes the given params to &Charge to complete an account link
     example: https://and-charge.com/#/confirmAccountLink?activationCode=code1&partnerId=PID001&partnerUserId=pid1&callbackUrl=https%3A%2F%2Fcom.mobility.provider%2Fand-charge%2Flink
     */
     fun createAccountLinkUrl(response: InitiateAccountLinkResponse): String {
-
-        val callbackUrl = urlParser.encodeUtf8("$scheme://$host$path")
-
+        val callbackUrl = urlParser.encodeUtf8(this.callbackUrl)
         return context.getString(
             R.string.url_andcharge_accountlink,
             response.activationCode,
@@ -82,8 +80,7 @@ class AndChargeUrlParser(
 
 
     private fun isAndChargeConnectAccountCallbackUrl(callbackUrl: String): Boolean {
-        return callbackUrl.contains(scheme)
-                && callbackUrl.contains(host)
+        return callbackUrl.startsWith(this.callbackUrl, true)
     }
 
     private fun parseAccountLinkResult(callbackUrl: String): AccountLinkResult {
@@ -103,7 +100,7 @@ class AndChargeUrlParser(
         val paramError = urlParser.getQueryParameter(url = callbackUrl, key = "error")
 
         return try {
-            AccountLinkResult.valueOf(paramError ?: "")
+            AccountLinkResult.errorValueOf(paramError)
         } catch (e: IllegalArgumentException) {
             AccountLinkResult.MISSING_ERROR_PARAM
         }
