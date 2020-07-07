@@ -6,7 +6,7 @@ import android.content.Intent
 import android.net.Uri
 
 /**
- * Opens a given link per with an ACTION_VIEW intent
+ * Opens a given link with an ACTION_VIEW intent
  *
  * Author: romanvysotsky
  * Created: 03.07.20

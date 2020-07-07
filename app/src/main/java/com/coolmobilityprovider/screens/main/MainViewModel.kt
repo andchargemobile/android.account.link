@@ -8,7 +8,8 @@ import com.coolmobilityprovider.base.BaseViewModel
 import com.coolmobilityprovider.base.SingleLiveEvent
 import com.coolmobilityprovider.base.launch
 import com.coolmobilityprovider.repository.CoolRepository
-import com.r.andcharge.command.OpenLinkCommand
+import com.r.andcharge.command.Command
+import com.r.andcharge.command.OpenAndChargeLinkCommand
 import com.r.andcharge.model.AccountLinkResult
 import com.r.andcharge.model.InitiateAccountLinkResponse
 import com.r.andcharge.util.AndChargeUrlParser
@@ -25,7 +26,7 @@ class MainViewModel(val callbackUrlResult: String?) : BaseViewModel() {
 
     val updateAndChargeAccountLinkUrl: MutableLiveData<Unit> = MutableLiveData(Unit)
 
-    val accountLinkInitiated: SingleLiveEvent<OpenLinkCommand> = SingleLiveEvent()
+    val accountLinkInitiated: SingleLiveEvent<Command> = SingleLiveEvent()
     val accountLinkResult: SingleLiveEvent<AccountLinkResult> = SingleLiveEvent()
     val onError: SingleLiveEvent<Throwable> = SingleLiveEvent()
 
@@ -66,11 +67,12 @@ class MainViewModel(val callbackUrlResult: String?) : BaseViewModel() {
     }
 
     /*
-     * Handle the response by creating an accountLinkUrl and opening it
+     * Handle the response by creating an accountLinkUrl
+     * and opening it by executing OpenAndChargeLinkCommand
      */
     private fun accountLinkCallSuccess(response: InitiateAccountLinkResponse) {
         val accountLinkUrl = urlParser.createAccountLinkUrl(response)
-        val command = OpenLinkCommand(accountLinkUrl)
+        val command = OpenAndChargeLinkCommand(accountLinkUrl)
         accountLinkInitiated.postValue(command)
     }
 
