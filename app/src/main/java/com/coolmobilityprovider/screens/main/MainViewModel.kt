@@ -7,10 +7,10 @@ import com.coolmobilityprovider.base.BaseViewModel
 import com.coolmobilityprovider.base.SingleLiveEvent
 import com.coolmobilityprovider.base.launch
 import com.coolmobilityprovider.repository.CoolRepository
-import com.r.andcharge.command.CompleteAccountLinkCommand
+import com.r.andcharge.command.OpenLinkCommand
 import com.r.andcharge.model.AccountLinkResult
 import com.r.andcharge.model.InitiateAccountLinkResponse
-import com.r.andcharge.util.AndChargeCallbackUrlParser
+import com.r.andcharge.util.AndChargeUrlParser
 import org.koin.core.inject
 
 /**
@@ -22,12 +22,12 @@ import org.koin.core.inject
 
 class MainViewModel(callbackUrlResult: String?) : BaseViewModel() {
 
-    val accountLinkInitiated: SingleLiveEvent<CompleteAccountLinkCommand> = SingleLiveEvent()
+    val accountLinkInitiated: SingleLiveEvent<OpenLinkCommand> = SingleLiveEvent()
     val accountLinkResult: SingleLiveEvent<AccountLinkResult> = SingleLiveEvent()
     val onError: SingleLiveEvent<Throwable> = SingleLiveEvent()
 
     private val coolRepository: CoolRepository by inject()
-    private val callbackUrlParser: AndChargeCallbackUrlParser by inject()
+    private val urlParser: AndChargeUrlParser by inject()
 
 
     /*
@@ -35,7 +35,7 @@ class MainViewModel(callbackUrlResult: String?) : BaseViewModel() {
      */
     init {
 
-        val result = callbackUrlParser.getAccountLinkResultOrNull(callbackUrlResult)
+        val result = urlParser.parseCallbackUrl(callbackUrlResult)
         if(result != null) {
             accountLinkResult.postValue(result)
         }
@@ -55,10 +55,11 @@ class MainViewModel(callbackUrlResult: String?) : BaseViewModel() {
     }
 
     /*
-     * With the response of your repository, create an instance of OpenAndChargeCommand
+     * Handle the response by creating an accountLinkUrl and opening it
      */
     private fun accountLinkCallSuccess(response: InitiateAccountLinkResponse) {
-        val command = CompleteAccountLinkCommand(response)
+        val accountLinkUrl = urlParser.createAccountLinkUrl(response)
+        val command = OpenLinkCommand(accountLinkUrl)
         accountLinkInitiated.postValue(command)
     }
 
@@ -73,10 +74,6 @@ class MainViewModel(callbackUrlResult: String?) : BaseViewModel() {
 
     class Factory(private val intent: Intent?) : ViewModelProvider.Factory {
 
-        /*
-         * After AccountLinkCommand is executed and &Charge completed account linking, it will deep link
-         * into your app with the provided callbackUrl. The url will have additional query parameters attached
-         */
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             return MainViewModel(intent?.data?.toString()) as T

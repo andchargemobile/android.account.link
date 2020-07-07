@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.coolmobilityprovider.R
-import com.r.andcharge.command.CompleteAccountLinkCommand
+import com.r.andcharge.command.OpenLinkCommand
 import com.r.andcharge.dialog.AccountLinkResultDialog
 import com.r.andcharge.model.InitiateAccountLinkResponse
-import com.r.andcharge.util.AndChargeCallbackUrlParser
+import com.r.andcharge.util.AndChargeUrlParser
 
 /**
  * Represents the screen where you link your user with &Charge.
@@ -59,8 +59,8 @@ class SimpleMainActivity : AppCompatActivity() {
      */
     private fun showDeepLinkResultIfAvailable() {
 
-        val parser = AndChargeCallbackUrlParser.createInstance(this)
-        val result = parser.getAccountLinkResultOrNull(intent)
+        val parser = AndChargeUrlParser.createInstance(this.applicationContext)
+        val result = parser.parseCallbackUrl(intent)
 
         if(result != null) {
             AccountLinkResultDialog.createAndShow(supportFragmentManager, result)
@@ -78,9 +78,10 @@ class SimpleMainActivity : AppCompatActivity() {
         openAndChargeWithInitiateResponse(response)
     }
 
+    /*
+    assume this calls a backend to init the account link
+     */
     private fun initiateAccountLink(): InitiateAccountLinkResponse {
-
-        //call backend ... return values
 
         val partnerId = "PID001"
         return InitiateAccountLinkResponse(
@@ -91,8 +92,15 @@ class SimpleMainActivity : AppCompatActivity() {
         )
     }
 
+    /*
+    handle the InitiateAccountLinkResponse by creating an accountLinkUrl and opening it
+     */
     private fun openAndChargeWithInitiateResponse(response: InitiateAccountLinkResponse) {
-        val command = CompleteAccountLinkCommand(response)
+
+        val parser = AndChargeUrlParser.createInstance(this.applicationContext)
+        val accountLinkUrl = parser.createAccountLinkUrl(response)
+
+        val command = OpenLinkCommand(accountLinkUrl)
         command.execute(this)
     }
 

@@ -17,6 +17,21 @@ import com.coolmobilityprovider.repository.LocalRepository
  * Created: 06.07.20
  */
 
+interface TextListener {
+    fun onChanged(text: String)
+}
+
+@BindingAdapter("bindTextChanged")
+fun bindTextChanged(editText: EditText, listener: TextListener?) {
+    if(listener == null) {
+        return
+    }
+
+    editText.addTextChangedListener(afterTextChanged = {
+        val value = it?.toString() ?: return@addTextChangedListener
+        listener.onChanged(value)
+    })
+}
 
 /*
 just a quick utility binding for syncing text with LocalRepository
