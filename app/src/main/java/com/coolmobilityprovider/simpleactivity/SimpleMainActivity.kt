@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.coolmobilityprovider.R
-import com.r.andcharge.command.OpenLinkCommand
+import com.r.andcharge.command.OpenAndChargeLinkCommand
 import com.r.andcharge.dialog.AccountLinkResultDialog
 import com.r.andcharge.model.InitiateAccountLinkResponse
 import com.r.andcharge.util.AndChargeUrlParser
@@ -56,6 +56,8 @@ class SimpleMainActivity : AppCompatActivity() {
 
     /*
     Check for AccountLinkResult in the intent and show AccountLinkResultDialog if result is available
+    if you use launchMode=singleTask for the activity you might need to handle the intent in
+    onNewIntent as well
      */
     private fun showDeepLinkResultIfAvailable() {
 
@@ -100,7 +102,7 @@ class SimpleMainActivity : AppCompatActivity() {
         val parser = AndChargeUrlParser.createInstance(this.applicationContext)
         val accountLinkUrl = parser.createAccountLinkUrl(response)
 
-        val command = OpenLinkCommand(accountLinkUrl)
+        val command = OpenAndChargeLinkCommand(accountLinkUrl)
         command.execute(this)
     }
 
