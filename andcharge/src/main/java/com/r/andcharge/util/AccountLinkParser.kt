@@ -3,30 +3,24 @@ package com.r.andcharge.util
 import android.content.Context
 import android.content.Intent
 import com.r.andcharge.R
+import com.r.andcharge.model.AccountLinkInit
 import com.r.andcharge.model.AccountLinkResult
-import com.r.andcharge.model.InitiateAccountLinkResponse
 
 /**
- * Responsible for urls regarding &Charge
+ * Responsible for parsing:
  *
- * InitiateAccountLinkResponse -> Url to open &Charge and complete the account link
- * Callback url -> AccountLinkResponse
+ * AccountLinkInit -> &Charge deep link
+ * &Charge callback -> AccountLinkResult
+ *
  *
  * Author: romanvysotsky
  * Created: 03.07.20
  */
 
-class AndChargeUrlParser(
+class AccountLinkParser(
     private val context: Context,
     private val urlParser: UrlParser
 ) {
-
-    companion object {
-        fun createInstance(context: Context): AndChargeUrlParser {
-            val urlParser = UrlParser.createInstance()
-            return AndChargeUrlParser(context, urlParser)
-        }
-    }
 
 
     private val scheme = context.getString(R.string.andcharge_callback_scheme)
@@ -40,7 +34,7 @@ class AndChargeUrlParser(
     which passes the given params to &Charge to complete an account link
     example: https://and-charge.com/#/confirmAccountLink?activationCode=code1&partnerId=PID001&partnerUserId=pid1&callbackUrl=https%3A%2F%2Fcom.mobility.provider%2Fand-charge%2Flink
     */
-    fun createAccountLinkUrl(response: InitiateAccountLinkResponse): String {
+    fun parseAccountLinkInit(response: AccountLinkInit): String {
         val callbackUrl = urlParser.encodeUtf8(this.callbackUrl)
         return context.getString(
             R.string.url_andcharge_accountlink,
@@ -57,9 +51,9 @@ class AndChargeUrlParser(
     if the intent data contains a valid callback url from &Charge for account linking
     or null otherwise
      */
-    fun parseCallbackUrl(intent: Intent?): AccountLinkResult? {
+    fun parseAccountLinkResult(intent: Intent?): AccountLinkResult? {
         val intentData = intent?.data?.toString()
-        return parseCallbackUrl(intentData)
+        return parseAccountLinkResult(intentData)
     }
 
     /*
@@ -67,12 +61,12 @@ class AndChargeUrlParser(
     if the given string is a valid callback url from &Charge for account linking
     or null otherwise
      */
-    fun parseCallbackUrl(intentData: String?): AccountLinkResult? {
+    fun parseAccountLinkResult(intentData: String?): AccountLinkResult? {
 
         val callbackUrl = intentData ?: ""
 
         return if(isAndChargeConnectAccountCallbackUrl(callbackUrl)) {
-            parseAccountLinkResult(callbackUrl)
+            parseAccountLink(callbackUrl)
         } else {
             null
         }
@@ -83,7 +77,8 @@ class AndChargeUrlParser(
         return callbackUrl.startsWith(this.callbackUrl, true)
     }
 
-    private fun parseAccountLinkResult(callbackUrl: String): AccountLinkResult {
+
+    private fun parseAccountLink(callbackUrl: String): AccountLinkResult {
 
         val paramOk = urlParser.getQueryParameter(url = callbackUrl, key = "ok")
             ?: return AccountLinkResult.MISSING_OK_PARAM
@@ -91,11 +86,11 @@ class AndChargeUrlParser(
         return if(paramOk.toBoolean()) {
             AccountLinkResult.SUCCESS
         } else {
-            parseAccountLinkResultError(callbackUrl)
+            parseAccountLinkError(callbackUrl)
         }
     }
 
-    private fun parseAccountLinkResultError(callbackUrl: String): AccountLinkResult {
+    private fun parseAccountLinkError(callbackUrl: String): AccountLinkResult {
 
         val paramError = urlParser.getQueryParameter(url = callbackUrl, key = "error")
 

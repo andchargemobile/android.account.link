@@ -1,6 +1,6 @@
 package com.coolmobilityprovider.repository
 
-import com.r.andcharge.model.InitiateAccountLinkResponse
+import com.r.andcharge.model.AccountLinkInit
 
 /**
  *
@@ -8,14 +8,14 @@ import com.r.andcharge.model.InitiateAccountLinkResponse
  * Created: 07.07.20
  */
 
-fun LocalRepository.createInitiateAccountLinkResponseFromLocalValues(): InitiateAccountLinkResponse {
+fun LocalRepository.createInitiateAccountLinkResponseFromLocalValues(): AccountLinkInit {
 
     val partnerId = retrieve("partnerId") ?: "partnerId"
     val partnerUserId = retrieve("partnerUserId") ?: "partnerUserId"
     val activationCode = retrieve("activationCode") ?: "activationCode"
     val status = retrieve("status") ?: "status"
 
-    return InitiateAccountLinkResponse(
+    return AccountLinkInit(
         partnerId,
         partnerUserId,
         activationCode,

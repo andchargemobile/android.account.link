@@ -1,6 +1,8 @@
 package com.r.andcharge.model
 
 /**
+ * wrapper for the information which must be passed to &Charge to complete an initiated account link
+ *
  * partnerId      = Your partner ID with which you registered yourself as a partner
  * partnerUserId  = The user for which you request the account link (user ID is defined by you, we'll map this to one of our users subsequently).
  * activationCode = The activation code that needs to be passed to the &Charge webpage or app to complete the link
@@ -10,7 +12,7 @@ package com.r.andcharge.model
  * Created: 03.07.20
  */
 
-data class InitiateAccountLinkResponse(
+data class AccountLinkInit(
     val partnerId: String,
     val partnerUserId: String,
     val activationCode: String,

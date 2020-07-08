@@ -1,6 +1,6 @@
 package com.coolmobilityprovider.repository
 
-import com.r.andcharge.model.InitiateAccountLinkResponse
+import com.r.andcharge.model.AccountLinkInit
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -12,6 +12,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface CoolRepository {
 
-    fun initiateAndChargeAccountLink(): Flow<InitiateAccountLinkResponse>
+    fun initiateAndChargeAccountLink(): Flow<AccountLinkInit>
 
 }

@@ -4,6 +4,7 @@ import android.net.Uri
 import java.net.URLEncoder
 
 /**
+ * Wraps url utility methods
  *
  * Author: romanvysotsky
  * Created: 03.07.20

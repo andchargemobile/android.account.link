@@ -1,6 +1,9 @@
 package com.coolmobilityprovider.base
 
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.viewModelScope
+import com.coolmobilityprovider.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
@@ -12,6 +15,13 @@ import org.koin.core.inject
  * Author: romanvysotsky
  * Created: 03.07.20
  */
+
+fun AppCompatActivity.showError(error: Throwable) {
+    val errorAsString = error.javaClass.simpleName + (error.message ?: "")
+    val errorText = this.getString(R.string.main_error, errorAsString)
+    val toast = Toast.makeText(this, errorText, Toast.LENGTH_LONG)
+    toast.show()
+}
 
 fun <T> BaseViewModel.launch(
     flow: Flow<T>,

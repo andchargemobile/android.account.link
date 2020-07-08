@@ -1,16 +1,15 @@
 package com.coolmobilityprovider.screens.main
 
-import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.coolmobilityprovider.R
+import com.coolmobilityprovider.base.showError
 import com.coolmobilityprovider.databinding.ActivityMainBinding
-import com.r.andcharge.dialog.AccountLinkResultDialog
+import com.r.andcharge.view.AccountLinkView
 
 
 /**
@@ -31,16 +30,33 @@ How to set up:
         android:host="@string/andcharge_callback_host" />
 
 
-How account linking works:
+How to use in the project:
 
-    1) Call your backend to initiate the account link
-    2) From that use AndChargeUrlParser to get the &Charge deep link, pass it to OpenAndChargeLinkCommand
-    3) &Charge will try to complete the account linking
-    4) &Charge will open this app with the callback url defined in your strings with extra params
-    5) Use AndChargeUrlParser to convert Intent -> AccountLinkResult
-    6) Show AccountLinkResult, for example by showing AccountLinkResultDialog
+    1) OnCreate of the activity receiving the callback url intent, create AccountLinkView:
+        val view = AccountLinkView(this)
+        view.showAccountLinkResult(intent)
+        view.showAccountLinkInit(viewModel.onAccountLinkInitiated)
 
-check for details: https://github.com/charge-partners/charge-and-partners/blob/master/link_partner_account.md
+    2) If you are using android:launchMode="singleTask", override onNewIntent
+       and pass the new intent there as well: view.onAccountLinkResultReceived(intent)
+
+    3) Call your backend to and post successful results to viewModel.onAccountLinkInitiated
+       alternatively pass the result manually when received view.showAccountLinkInit(result)
+
+
+The account linking flow:
+
+    1) Your backend initiates an account link and the result AccountLinkInit is passed to AccountLinkView
+    2) The sdk parses AccountLinkInit to a deep link for &Charge to handle
+    3) The sdk deep links into &Charge or opens a browser
+    4) &Charge completes the account link, it can be successful or some error occurs
+    5) &Charge deep links into your app with the url you defined in "How to set up" with extra params
+    6) You pass the intent to AccountLinkView
+    7) AccountLinkView parses: Intent -> AccountLinkResult
+    8) A fragment dialog is shown with the result
+
+check for details on the data types etc:
+https://github.com/charge-partners/charge-and-partners/blob/master/link_partner_account.md
 
  *
  * Author: romanvysotsky
@@ -49,26 +65,25 @@ check for details: https://github.com/charge-partners/charge-and-partners/blob/m
 
 class MainActivity : AppCompatActivity() {
 
-    private val viewModel: MainViewModel by viewModels { MainViewModel.Factory(intent) }
+    private val viewModel: MainViewModel by viewModels()
     private var dataBinding: ActivityMainBinding? = null
+    private var accountLinkView: AccountLinkView? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        initDataBinding()
+        listenToOnErrors()
 
-        listenToOnError()
-        listenToAccountLinkComplete()
-        listenToAccountLinkShowResult()
+        initDataBinding()
+        initAccountLinkView()
     }
 
-    /*
-    handle new intents in case of launchMode=singleTask by passing the intent data string
-     */
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        viewModel.onNewIntent(intent?.data?.toString())
+
+    private fun listenToOnErrors() {
+        viewModel.onError.observe(this, Observer {
+            if (it != null) showError(it)
+        })
     }
 
 
@@ -80,49 +95,24 @@ class MainActivity : AppCompatActivity() {
 
 
     /*
-     * Show the AccountLinkResult. For example by showing the AccountLinkResultDialog
+     * Instantiate an AccountLinkView and make it subscribe to initiated account links
      */
-    private fun listenToAccountLinkShowResult() {
+    private fun initAccountLinkView() {
 
-        viewModel.accountLinkResult.observe(this, Observer {
-            if(it != null) AccountLinkResultDialog.createAndShow(supportFragmentManager, it)
-        })
+        val view = AccountLinkView(this)
+        view.showAccountLinkResult(intent)
+        view.showAccountLinkInit(viewModel.onAccountLinkInitiated)
+        accountLinkView = view
+
     }
+
 
     /*
-     * Execute the command
+     * If you're using android:launchMode="singleTask", also check the new intent for results
      */
-    private fun listenToAccountLinkComplete() {
-
-        viewModel.accountLinkInitiated.observe(this, Observer {
-            try {
-                it?.execute(this)
-            } catch (e: ActivityNotFoundException) {
-                // watch out as the device might have neither &Charge nor a browser installed
-                showError(e)
-            }
-        })
-    }
-
-    /*
-     * Handle errors however
-     */
-    private fun listenToOnError() {
-        viewModel.onError.observe(this, Observer {
-            if(it != null) showError(it)
-        })
-    }
-
-
-    private fun showError(error: Throwable) {
-        val errorAsString = error.javaClass.simpleName + (error.message ?: "")
-        val errorText = this.getString(R.string.main_error, errorAsString)
-        showText(errorText)
-    }
-
-    private fun showText(text: String) {
-        val toast = Toast.makeText(this, text, Toast.LENGTH_LONG)
-        toast.show()
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        accountLinkView?.showAccountLinkResult(intent)
     }
 
 }

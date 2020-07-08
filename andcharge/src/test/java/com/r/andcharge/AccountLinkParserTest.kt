@@ -5,9 +5,9 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import com.r.andcharge.model.AccountLinkInit
 import com.r.andcharge.model.AccountLinkResult
-import com.r.andcharge.model.InitiateAccountLinkResponse
-import com.r.andcharge.util.AndChargeUrlParser
+import com.r.andcharge.util.AccountLinkParser
 import com.r.andcharge.util.UrlParser
 import org.junit.Before
 import org.junit.Test
@@ -18,9 +18,9 @@ import org.junit.Test
  * Created: 07.07.20
  */
 
-class AndChargeUrlParserTest {
+class AccountLinkParserTest {
 
-    lateinit var andChargeUrlParser: AndChargeUrlParser
+    lateinit var accountLinkParser: AccountLinkParser
     val context: Context = mock()
     val parser: UrlParser = mock()
 
@@ -36,7 +36,7 @@ class AndChargeUrlParserTest {
         whenever(context.getString(R.string.andcharge_callback_host)).thenReturn(host)
         whenever(context.getString(R.string.andcharge_callback_path)).thenReturn(path)
 
-        andChargeUrlParser = AndChargeUrlParser(context, parser)
+        accountLinkParser = AccountLinkParser(context, parser)
     }
 
 
@@ -48,7 +48,7 @@ class AndChargeUrlParserTest {
         val partnerUserId = "puid"
         val activationCode = "ac"
         val status = "st"
-        val response = InitiateAccountLinkResponse(partnerId, partnerUserId, activationCode, status)
+        val response = AccountLinkInit(partnerId, partnerUserId, activationCode, status)
         val success  = "success"
 
         whenever(parser.encodeUtf8(expectedCallbackUrl)).thenReturn(expectedCallbackUrl)
@@ -61,7 +61,7 @@ class AndChargeUrlParserTest {
         )).thenReturn(success)
 
 
-        val result = andChargeUrlParser.createAccountLinkUrl(response)
+        val result = accountLinkParser.parseAccountLinkInit(response)
 
 
         assert(result == success)
@@ -82,8 +82,8 @@ class AndChargeUrlParserTest {
         val data1: String? = null
         val data2: String? = ""
 
-        val result1 = andChargeUrlParser.parseCallbackUrl(data1)
-        val result2 = andChargeUrlParser.parseCallbackUrl(data2)
+        val result1 = accountLinkParser.parseAccountLinkResult(data1)
+        val result2 = accountLinkParser.parseAccountLinkResult(data2)
 
         assert(result1 == null)
         assert(result2 == null)
@@ -96,7 +96,7 @@ class AndChargeUrlParserTest {
         val callbackUrl = "$scheme://$host$path?ok=true"
         whenever(parser.getQueryParameter(callbackUrl, "ok")).thenReturn("true")
 
-        val result = andChargeUrlParser.parseCallbackUrl(callbackUrl)
+        val result = accountLinkParser.parseAccountLinkResult(callbackUrl)
 
         assert(result == AccountLinkResult.SUCCESS)
     }
@@ -107,7 +107,7 @@ class AndChargeUrlParserTest {
         val callbackUrl = "$scheme://$host$path?ok=true&error=PARTNER_NOT_FOUND"
         whenever(parser.getQueryParameter(callbackUrl, "ok")).thenReturn("true")
 
-        val result = andChargeUrlParser.parseCallbackUrl(callbackUrl)
+        val result = accountLinkParser.parseAccountLinkResult(callbackUrl)
 
         assert(result == AccountLinkResult.SUCCESS)
     }
@@ -122,7 +122,7 @@ class AndChargeUrlParserTest {
         val callbackUrl = "$scheme://$host$path?ok=true"
         whenever(parser.getQueryParameter(callbackUrl, "ok")).thenReturn("true")
 
-        val result = andChargeUrlParser.parseCallbackUrl(callbackUrl)
+        val result = accountLinkParser.parseAccountLinkResult(callbackUrl)
 
         assert(result == AccountLinkResult.SUCCESS)
     }
@@ -134,7 +134,7 @@ class AndChargeUrlParserTest {
         val callbackUrl = "$scheme://$host$path?error=PARTNER_NOT_FOUND"
         whenever(parser.getQueryParameter(callbackUrl, "ok")).thenReturn(null)
 
-        val result = andChargeUrlParser.parseCallbackUrl(callbackUrl)
+        val result = accountLinkParser.parseAccountLinkResult(callbackUrl)
 
         assert(result == AccountLinkResult.MISSING_OK_PARAM)
     }
@@ -146,7 +146,7 @@ class AndChargeUrlParserTest {
         whenever(parser.getQueryParameter(callbackUrl, "ok")).thenReturn("false")
         whenever(parser.getQueryParameter(callbackUrl, "error")).thenReturn(null)
 
-        val result = andChargeUrlParser.parseCallbackUrl(callbackUrl)
+        val result = accountLinkParser.parseAccountLinkResult(callbackUrl)
 
         assert(result == AccountLinkResult.MISSING_ERROR_PARAM)
     }
@@ -158,7 +158,7 @@ class AndChargeUrlParserTest {
         whenever(parser.getQueryParameter(callbackUrl, "ok")).thenReturn("false")
         whenever(parser.getQueryParameter(callbackUrl, "error")).thenReturn("someError")
 
-        val result = andChargeUrlParser.parseCallbackUrl(callbackUrl)
+        val result = accountLinkParser.parseAccountLinkResult(callbackUrl)
 
         assert(result == AccountLinkResult.MISSING_ERROR_PARAM)
     }
@@ -171,7 +171,7 @@ class AndChargeUrlParserTest {
         whenever(parser.getQueryParameter(callbackUrl, "ok")).thenReturn("false")
         whenever(parser.getQueryParameter(callbackUrl, "error")).thenReturn("MANDATORY_PARAMETER_NOT_SET")
 
-        val result = andChargeUrlParser.parseCallbackUrl(callbackUrl)
+        val result = accountLinkParser.parseAccountLinkResult(callbackUrl)
 
         assert(result == AccountLinkResult.MANDATORY_PARAMETER_NOT_SET)
     }
@@ -183,7 +183,7 @@ class AndChargeUrlParserTest {
         whenever(parser.getQueryParameter(callbackUrl, "ok")).thenReturn("false")
         whenever(parser.getQueryParameter(callbackUrl, "error")).thenReturn("MAndatOrY_PArameTER_NoT_sEt")
 
-        val result = andChargeUrlParser.parseCallbackUrl(callbackUrl)
+        val result = accountLinkParser.parseAccountLinkResult(callbackUrl)
 
         assert(result == AccountLinkResult.MANDATORY_PARAMETER_NOT_SET)
     }
@@ -196,7 +196,7 @@ class AndChargeUrlParserTest {
         whenever(parser.getQueryParameter(callbackUrl, "ok")).thenReturn("false")
         whenever(parser.getQueryParameter(callbackUrl, "error")).thenReturn("SUCCESS")
 
-        val result = andChargeUrlParser.parseCallbackUrl(callbackUrl)
+        val result = accountLinkParser.parseAccountLinkResult(callbackUrl)
 
         assert(result == AccountLinkResult.MISSING_ERROR_PARAM)
     }
@@ -209,10 +209,10 @@ class AndChargeUrlParserTest {
         val callbackUrl3 = "https://www.google.com?error=MANDATORY_PARAMETER_NOT_SET"
         val callbackUrl4 = "https://www.google.com"
 
-        val result1 = andChargeUrlParser.parseCallbackUrl(callbackUrl1)
-        val result2 = andChargeUrlParser.parseCallbackUrl(callbackUrl2)
-        val result3 = andChargeUrlParser.parseCallbackUrl(callbackUrl3)
-        val result4 = andChargeUrlParser.parseCallbackUrl(callbackUrl4)
+        val result1 = accountLinkParser.parseAccountLinkResult(callbackUrl1)
+        val result2 = accountLinkParser.parseAccountLinkResult(callbackUrl2)
+        val result3 = accountLinkParser.parseAccountLinkResult(callbackUrl3)
+        val result4 = accountLinkParser.parseAccountLinkResult(callbackUrl4)
 
         assert(result1 == null)
         assert(result2 == null)
@@ -225,7 +225,7 @@ class AndChargeUrlParserTest {
 
         val callbackUrl = "https://www.google.com?ok=true&foo=$scheme&bar=$host"
 
-        val result = andChargeUrlParser.parseCallbackUrl(callbackUrl)
+        val result = accountLinkParser.parseAccountLinkResult(callbackUrl)
 
         assert(result == null)
     }
@@ -235,7 +235,7 @@ class AndChargeUrlParserTest {
 
         val callbackUrl = "$host://$path?=$scheme?ok=true&foo=$scheme&bar=$host"
 
-        val result = andChargeUrlParser.parseCallbackUrl(callbackUrl)
+        val result = accountLinkParser.parseAccountLinkResult(callbackUrl)
 
         assert(result == null)
     }

@@ -1,4 +1,4 @@
-package com.r.andcharge.dialog
+package com.r.andcharge.view
 
 import android.os.Bundle
 import android.view.LayoutInflater

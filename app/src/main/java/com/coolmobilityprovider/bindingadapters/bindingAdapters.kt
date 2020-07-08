@@ -8,7 +8,7 @@ import androidx.databinding.BindingAdapter
 import com.coolmobilityprovider.base.getKoinInstance
 import com.coolmobilityprovider.repository.LocalRepository
 import com.coolmobilityprovider.repository.createInitiateAccountLinkResponseFromLocalValues
-import com.r.andcharge.util.AndChargeUrlParser
+import com.r.andcharge.util.AccountLinkParser
 
 /**
  *
@@ -39,10 +39,10 @@ just a utility binding to show the account link url when the user changes the de
 fun bindAccountLinkUrl(textView: TextView, unit: Unit) {
 
     val localRepository = getKoinInstance<LocalRepository>()
-    val urlParser = getKoinInstance<AndChargeUrlParser>()
+    val urlParser = getKoinInstance<AccountLinkParser>()
 
     val pseudoResponse = localRepository.createInitiateAccountLinkResponseFromLocalValues()
-    val accountLinkUrl = urlParser.createAccountLinkUrl(pseudoResponse)
+    val accountLinkUrl = urlParser.parseAccountLinkInit(pseudoResponse)
     textView.text = accountLinkUrl
 }
 
