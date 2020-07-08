@@ -22,12 +22,9 @@ class AccountLinkViewModel(private val parser: AccountLinkParser) : ViewModel() 
     val accountLinkInitCommand: SingleLiveEvent<Command> = SingleLiveEvent()
     val accountLinkResultCommand: SingleLiveEvent<Command> = SingleLiveEvent()
 
-    private var previousIntentData: String? = null
-
 
     fun onIntentData(intentData: String?) {
 
-        previousIntentData = intentData
         val result = parser.parseAccountLinkResult(intentData) ?: return
         val command = OpenAccountLinkResultCommand(result)
         accountLinkResultCommand.postValue(command)
