@@ -9,9 +9,21 @@ This sdk is meant to simplify the integration of account linking with &Charge on
 
 ## How do I add the sdk? ##
 
-The easiest way to add this to your android project is to: Clone the repository, add the sdk via File -> New -> Import Module...
+Manually: Clone the repository, add the sdk via File -> New -> Import Module...
 
-In the future we might set up a private jitpack repository so anyone with an auth token will be able to import this directly via gradle
+Or via gradle:
+
+	allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+    
+    dependencies {
+	        implementation 'org.bitbucket.andcharge:android_andcharge_account_link:master-SNAPSHOT'
+	}
+
 
 ## How do I get started? ##
 
