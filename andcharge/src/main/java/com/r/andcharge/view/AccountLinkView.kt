@@ -5,7 +5,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import com.r.andcharge.base.Command
+import com.r.andcharge.command.OpenAccountLinkInitCommand
+import com.r.andcharge.command.OpenAccountLinkResultCommand
 import com.r.andcharge.model.AccountLinkInit
 
 /**
@@ -14,16 +15,19 @@ import com.r.andcharge.model.AccountLinkInit
  * Created: 08.07.20
  */
 
-class AccountLinkView(private val view: AppCompatActivity) {
+class AccountLinkView(
+    private val view: AppCompatActivity,
+    onShowInit: Observer<OpenAccountLinkInitCommand> = Observer { it.execute(view) },
+    onShowResult: Observer<OpenAccountLinkResultCommand> = Observer { it.execute(view) }
+) {
 
     private val viewModel: AccountLinkViewModel
             by view.viewModels { AccountLinkViewModel.Factory(view.applicationContext) }
 
 
     init {
-        val commandObserver = Observer<Command> { it.execute(view) }
-        viewModel.accountLinkInitCommand.observe(view, commandObserver)
-        viewModel.accountLinkResultCommand.observe(view, commandObserver)
+        viewModel.accountLinkInitCommand.observe(view, onShowInit)
+        viewModel.accountLinkResultCommand.observe(view, onShowResult)
     }
 
 

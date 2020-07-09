@@ -18,7 +18,7 @@ import com.r.andcharge.base.Command
  * Created: 07.07.20
  */
 
-class OpenAccountLinkInitCommand(private val link: String) : Command {
+class OpenAccountLinkInitCommand(val link: String) : Command {
 
 
     @Throws(ActivityNotFoundException::class)

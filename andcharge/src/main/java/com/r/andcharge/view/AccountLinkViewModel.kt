@@ -3,7 +3,6 @@ package com.r.andcharge.view
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.r.andcharge.base.Command
 import com.r.andcharge.base.SingleLiveEvent
 import com.r.andcharge.command.OpenAccountLinkInitCommand
 import com.r.andcharge.command.OpenAccountLinkResultCommand
@@ -19,8 +18,8 @@ import com.r.andcharge.util.UrlParser
 
 class AccountLinkViewModel(private val parser: AccountLinkParser) : ViewModel() {
 
-    val accountLinkInitCommand: SingleLiveEvent<Command> = SingleLiveEvent()
-    val accountLinkResultCommand: SingleLiveEvent<Command> = SingleLiveEvent()
+    val accountLinkInitCommand: SingleLiveEvent<OpenAccountLinkInitCommand> = SingleLiveEvent()
+    val accountLinkResultCommand: SingleLiveEvent<OpenAccountLinkResultCommand> = SingleLiveEvent()
 
 
     fun onIntentData(intentData: String?) {

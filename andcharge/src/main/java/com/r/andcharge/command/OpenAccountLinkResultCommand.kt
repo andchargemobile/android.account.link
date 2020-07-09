@@ -12,7 +12,7 @@ import com.r.andcharge.view.AccountLinkResultDialog
  * Created: 08.07.20
  */
 
-class OpenAccountLinkResultCommand(private val result: AccountLinkResult) : Command {
+class OpenAccountLinkResultCommand(val result: AccountLinkResult) : Command {
 
     override fun execute(context: AppCompatActivity) {
         AccountLinkResultDialog.createAndShow(context.supportFragmentManager, result)
