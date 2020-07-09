@@ -3,7 +3,9 @@ package com.r.andcharge.model
 import com.r.andcharge.R
 
 /**
- * enum representing all states which can occur after completing an initiated account link
+ * Representing all states which can occur after &Charges completes an initiated account link
+ *
+ * @property textResourceId the string resource id of the explanation associated with the account link result
  *
  * Author: romanvysotsky
  * Created: 03.07.20

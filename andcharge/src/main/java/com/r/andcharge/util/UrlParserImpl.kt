@@ -4,6 +4,7 @@ import android.net.Uri
 import java.net.URLEncoder
 
 /**
+ * Default impl of [UrlParser]
  *
  * Author: romanvysotsky
  * Created: 09.07.20

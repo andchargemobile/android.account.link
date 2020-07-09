@@ -6,7 +6,9 @@ import com.r.andcharge.model.AccountLinkResult
 import com.r.andcharge.view.AccountLinkResultDialog
 
 /**
- * Shows the result of an account link with the help of a dialog
+ * Shows [AccountLinkResult] by using [AccountLinkResultDialog]
+ *
+ * @property result the final result of the account linking, response from &Charge
  *
  * Author: romanvysotsky
  * Created: 08.07.20

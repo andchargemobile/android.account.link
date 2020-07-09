@@ -11,8 +11,11 @@ import com.r.andcharge.util.AccountLinkParser
 import com.r.andcharge.util.UrlParser
 
 /**
- * parses String (&Charge callback url after completing account link) -> OpenAccountLinkResultCommand
- * parses AccountLinkInit -> OpenAccountLinkInitCommand
+ * Responsible for
+ * parsing String (&Charge callback url after completing account link) -> OpenAccountLinkResultCommand
+ * parsing AccountLinkInit -> OpenAccountLinkInitCommand
+ *
+ * @property parser utility class for parsing
  *
  * Author: romanvysotsky
  * Created: 08.07.20
@@ -24,6 +27,11 @@ class AccountLinkViewModel(private val parser: AccountLinkParser) : ViewModel() 
     val accountLinkResultCommand: SingleLiveEvent<OpenAccountLinkResultCommand> = SingleLiveEvent()
 
 
+    /**
+     * Posts an [OpenAccountLinkResultCommand] if the [intentData] is a valid callback url
+     *
+     * @param intentData a callback url from &Charge into your app
+     */
     fun onIntentData(intentData: String?) {
 
         val result = parser.parseAccountLinkResult(intentData) ?: return
@@ -32,6 +40,11 @@ class AccountLinkViewModel(private val parser: AccountLinkParser) : ViewModel() 
 
     }
 
+    /**
+     * Posts [OpenAccountLinkInitCommand] containing the deep link into &Charge with the values from [response]
+     *
+     * @param response the result of initiating an account link
+     */
     fun onInitAccountLink(response: AccountLinkInit) {
 
         val accountLinkUrl = parser.parseAccountLinkInit(response)

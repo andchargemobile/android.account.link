@@ -9,10 +9,9 @@ import com.r.andcharge.BuildConfig
 import com.r.andcharge.base.Command
 
 /**
- * Opens &Charge to complete an initiated account link
+ * Opens preferably &Charge or a browser with the [link]
  *
- * opens &Charge directly if its installed with the given link
- * if its not installed, open any app that can handle the link
+ * @property link a deep link for &Charge
  *
  * Author: romanvysotsky
  * Created: 07.07.20

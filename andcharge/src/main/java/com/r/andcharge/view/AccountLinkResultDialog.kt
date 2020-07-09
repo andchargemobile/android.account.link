@@ -25,10 +25,28 @@ class AccountLinkResultDialog : DialogFragment() {
         private const val RESULT_KEY = "AccountLinkResult"
         private const val DIM_AMOUNT = 0.85f
 
+        /**
+         * Creates an instance of [AccountLinkResultDialog] and shows it immediately
+         *
+         * @param fragmentManager support fragment manager
+         * @param result result of the account linking with &Charge
+         */
         fun createAndShow(fragmentManager: FragmentManager, result: AccountLinkResult) {
             val accountLinkResultDialog = AccountLinkResultDialog()
             accountLinkResultDialog.setAccountLinkResult(result)
             accountLinkResultDialog.show(fragmentManager, AccountLinkResultDialog::class.java.name)
+        }
+
+        /**
+         * Creates an instance of [AccountLinkResultDialog]
+         *
+         * @param result result of the account linking with &Charge
+         * @return an [AccountLinkResultDialog] instance holding the [result]
+         */
+        fun createInstance(result: AccountLinkResult): AccountLinkResultDialog {
+            val accountLinkResultDialog = AccountLinkResultDialog()
+            accountLinkResultDialog.setAccountLinkResult(result)
+            return accountLinkResultDialog
         }
 
     }

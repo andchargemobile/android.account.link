@@ -7,11 +7,10 @@ import com.r.andcharge.model.AccountLinkInit
 import com.r.andcharge.model.AccountLinkResult
 
 /**
- * Responsible for parsing:
+ * Default impl of [AccountLinkParser], check it for more details
  *
  * AccountLinkInit -> &Charge deep link
  * &Charge callback -> AccountLinkResult
- *
  *
  * Author: romanvysotsky
  * Created: 03.07.20
@@ -29,11 +28,7 @@ class AccountLinkParserImpl(
     private val callbackUrl = "$scheme://$host$path"
 
 
-    /*
-    returns a url string
-    which passes the given params to &Charge to complete an account link
-    example: https://and-charge.com/#/confirmAccountLink?activationCode=code1&partnerId=PID001&partnerUserId=pid1&callbackUrl=https%3A%2F%2Fcom.mobility.provider%2Fand-charge%2Flink
-    */
+
     override fun parseAccountLinkInit(response: AccountLinkInit): String {
         val callbackUrl = urlParser.encodeUtf8(this.callbackUrl)
         return context.getString(
@@ -46,21 +41,12 @@ class AccountLinkParserImpl(
     }
 
 
-    /*
-    returns the AccountLinkResult
-    if the intent data contains a valid callback url from &Charge for account linking
-    or null otherwise
-     */
     override fun parseAccountLinkResult(intent: Intent?): AccountLinkResult? {
         val intentData = intent?.data?.toString()
         return parseAccountLinkResult(intentData)
     }
 
-    /*
-    returns the AccountLinkResult
-    if the given string is a valid callback url from &Charge for account linking
-    or null otherwise
-     */
+
     override fun parseAccountLinkResult(intentData: String?): AccountLinkResult? {
 
         val callbackUrl = intentData ?: ""
