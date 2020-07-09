@@ -11,6 +11,8 @@ import com.r.andcharge.util.AccountLinkParser
 import com.r.andcharge.util.UrlParser
 
 /**
+ * parses String (&Charge callback url after completing account link) -> OpenAccountLinkResultCommand
+ * parses AccountLinkInit -> OpenAccountLinkInitCommand
  *
  * Author: romanvysotsky
  * Created: 08.07.20
@@ -44,7 +46,7 @@ class AccountLinkViewModel(private val parser: AccountLinkParser) : ViewModel() 
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             val urlParser = UrlParser.createInstance()
-            val accountLinkParser = AccountLinkParser(context, urlParser)
+            val accountLinkParser = AccountLinkParser.createInstance(context, urlParser)
             val viewModel = AccountLinkViewModel(accountLinkParser)
             return viewModel as T
         }

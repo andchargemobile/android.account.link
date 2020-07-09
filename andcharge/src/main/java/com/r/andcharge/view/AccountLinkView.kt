@@ -10,6 +10,12 @@ import com.r.andcharge.command.OpenAccountLinkResultCommand
 import com.r.andcharge.model.AccountLinkInit
 
 /**
+ * View for AccountLink,
+ * showing a result dialog when the account link is completed
+ * and showing the &Charge app when an account link is initiated
+ *
+ * can pass custom Observers to onShowInit and onShowResult to, for example,
+ * do an action before showing the result or applying custom view logic to AccountLinkResult
  *
  * Author: romanvysotsky
  * Created: 08.07.20

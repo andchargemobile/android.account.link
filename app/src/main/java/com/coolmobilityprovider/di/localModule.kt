@@ -17,7 +17,7 @@ import org.koin.dsl.module
 val localModule = module {
 
     single<LocalRepository> { LocalRepositoryImpl(get()) }
-    single { AccountLinkParser(get(), get()) }
+    single { AccountLinkParser.createInstance(get(), get()) }
     single { UrlParser.createInstance() }
 
 }

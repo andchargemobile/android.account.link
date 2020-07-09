@@ -7,7 +7,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import com.r.andcharge.model.AccountLinkInit
 import com.r.andcharge.model.AccountLinkResult
-import com.r.andcharge.util.AccountLinkParser
+import com.r.andcharge.util.AccountLinkParserImpl
 import com.r.andcharge.util.UrlParser
 import org.junit.Before
 import org.junit.Test
@@ -20,7 +20,7 @@ import org.junit.Test
 
 class AccountLinkParserTest {
 
-    lateinit var accountLinkParser: AccountLinkParser
+    lateinit var accountLinkParser: AccountLinkParserImpl
     val context: Context = mock()
     val parser: UrlParser = mock()
 
@@ -36,7 +36,7 @@ class AccountLinkParserTest {
         whenever(context.getString(R.string.andcharge_callback_host)).thenReturn(host)
         whenever(context.getString(R.string.andcharge_callback_path)).thenReturn(path)
 
-        accountLinkParser = AccountLinkParser(context, parser)
+        accountLinkParser = AccountLinkParserImpl(context, parser)
     }
 
 
