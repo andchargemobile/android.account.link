@@ -4,8 +4,10 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.r.andcharge.BuildConfig
+import com.r.andcharge.R
 import com.r.andcharge.base.Command
 
 /**
@@ -20,7 +22,6 @@ import com.r.andcharge.base.Command
 class OpenAccountLinkInitCommand(val link: String) : Command {
 
 
-    @Throws(ActivityNotFoundException::class)
     override fun execute(context: AppCompatActivity) {
 
         val intentUri = Uri.parse(link)
@@ -31,7 +32,12 @@ class OpenAccountLinkInitCommand(val link: String) : Command {
         intent.data = intentUri
         intent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
 
-        context.startActivity(intent)
+        try {
+            context.startActivity(intent)
+        } catch (e: ActivityNotFoundException) {
+            val cannotLinkAccount = context.getString(R.string.connect_cannot_link)
+            Toast.makeText(context, cannotLinkAccount, Toast.LENGTH_LONG).show()
+        }
     }
 
 
