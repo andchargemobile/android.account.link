@@ -2,61 +2,76 @@
 
 ## What is this repository for? ##
 
-* Quick summary
+* This sdk is meant to simplify the integration of account linking with &Charge on Android
 * Version 1.0.0
 
-This sdk is meant to simplify the integration of account linking with &Charge on Android
-
-## How do I add the sdk? ##
+## How do I get started? ##
 
 Manually: Clone the repository, add the sdk via File -> New -> Import Module...
 
-Or via gradle:
+Or via gradle, go to https://jitpack.io/private#auth, get the auth token of the invited git account, add auth token to $HOME/.gradle/gradle.properties (jitAuthToken=jp_5...)
 
 	allprojects {
 		repositories {
 			...
-			maven { url 'https://jitpack.io' }
+			maven { 
+				url 'https://jitpack.io'
+				credentials { username jitAuthToken }
+			}
 		}
 	}
     
     dependencies {
-	        implementation 'org.bitbucket.andcharge:android_andcharge_account_link:master-SNAPSHOT'
+	        implementation 'com.github.andchargemobile:android.account.link:1.0.0'
 	}
-
-
-## How do I get started? ##
-
-In advance, you can check MainActivity.kt and SimpleMainActivity.kt for examples.
-But roughly speaking it's this:
+	
 
 
 ## How to set up: ##
 
-redefine the callback url scheme & host strings in your ids.xml or strings.xml to fit your requirements
+### 1) Redefine the callback url scheme & host strings in your ids.xml or strings.xml to fit your requirements ###
 
     <string name="andcharge_callback_scheme" translatable="false">mp</string>
     <string name="andcharge_callback_host" translatable="false">and-charge</string>
     <string name="andcharge_callback_path" translatable="false" />
+    
+#### In the manifest, if not using path ####
 
-In the manifest, your activity should have an intent filter with this data element
+	<intent-filter>
+	    ...
+	
+    		<data android:scheme="@string/andcharge_callback_scheme"
+			android:host="@string/andcharge_callback_host" />
+	
+	</intent-filter>
+	
+#### If using path ####
 
-  <data android:scheme="@string/andcharge_callback_scheme" android:host="@string/andcharge_callback_host" />
+	<intent-filter>
+	    ...
+	
+    		<data android:scheme="@string/andcharge_callback_scheme"
+			android:host="@string/andcharge_callback_host"
+			android:path="@string/andcharge_callback_path"/>
+	
+	</intent-filter>
 
-
-## How to use in the project: ##
-
-    1) OnCreate of the activity receiving the callback url intent, create AccountLinkView:
+### 2) OnCreate of the activity receiving the callback url intent from step 1), create AccountLinkView: ###
 
     val view = AccountLinkView(this)
     view.showAccountLinkResult(intent)
     view.showAccountLinkInit(viewModel.onAccountLinkInitiated)
 
-    2) If you are using android:launchMode="singleTask", override onNewIntent
-       and pass the new intent there as well: view.onAccountLinkResultReceived(intent)
+#### If you are using android:launchMode="singleTask" ####
+    override onNewIntent and pass the new intent to the AccountLinkView: view.onAccountLinkResultReceived(intent)
 
-    3) Call your backend to and post successful results to viewModel.onAccountLinkInitiated
-       alternatively pass the result manually when received view.showAccountLinkInit(result)
+#### If not using live data ####
+    instead of 
+    	view.showAccountLinkInit(viewModel.onAccountLinkInitiated)
+    pass your result directly
+    	view.showAccountLinkInit(result)
+	
+#### Also, check MainActivity.kt for an example ####
 
 
 ## The account linking flow: ##
@@ -76,5 +91,4 @@ https://github.com/charge-partners/charge-and-partners/blob/master/link_partner_
 
 ## Who do I talk to? ##
 
-questions regarding the android sdk please to
-roman@and-charge.me
+Mail questions regarding the android sdk please to roman@and-charge.me
