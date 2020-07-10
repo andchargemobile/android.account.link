@@ -1,6 +1,6 @@
 package com.r.andcharge.base
 
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
 
 /**
  *
@@ -10,6 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 
 interface Command {
 
-    fun execute(context: AppCompatActivity)
+    fun execute(context: FragmentActivity)
 
 }

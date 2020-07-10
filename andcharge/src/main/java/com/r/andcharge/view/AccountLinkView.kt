@@ -2,7 +2,7 @@ package com.r.andcharge.view
 
 import android.content.Intent
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.r.andcharge.command.OpenAccountLinkInitCommand
@@ -36,7 +36,7 @@ import com.r.andcharge.model.AccountLinkResult
  */
 
 class AccountLinkView(
-    private val view: AppCompatActivity,
+    private val view: FragmentActivity,
     onShowInit: Observer<OpenAccountLinkInitCommand> = Observer { it.execute(view) },
     onShowResult: Observer<OpenAccountLinkResultCommand> = Observer { it.execute(view) }
 ) {

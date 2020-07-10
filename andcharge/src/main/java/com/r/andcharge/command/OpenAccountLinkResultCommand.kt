@@ -1,6 +1,6 @@
 package com.r.andcharge.command
 
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
 import com.r.andcharge.base.Command
 import com.r.andcharge.model.AccountLinkResult
 import com.r.andcharge.view.AccountLinkResultDialog
@@ -16,7 +16,7 @@ import com.r.andcharge.view.AccountLinkResultDialog
 
 class OpenAccountLinkResultCommand(val result: AccountLinkResult) : Command {
 
-    override fun execute(context: AppCompatActivity) {
+    override fun execute(context: FragmentActivity) {
         AccountLinkResultDialog.createAndShow(context.supportFragmentManager, result)
     }
 

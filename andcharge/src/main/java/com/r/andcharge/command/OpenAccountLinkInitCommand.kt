@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
 import com.r.andcharge.BuildConfig
 import com.r.andcharge.R
 import com.r.andcharge.base.Command
@@ -22,7 +22,7 @@ import com.r.andcharge.base.Command
 class OpenAccountLinkInitCommand(val link: String) : Command {
 
 
-    override fun execute(context: AppCompatActivity) {
+    override fun execute(context: FragmentActivity) {
 
         val intentUri = Uri.parse(link)
         val intentAction = Intent.ACTION_VIEW
