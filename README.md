@@ -9,14 +9,13 @@
 
 Manually: Clone the repository, add the sdk via File -> New -> Import Module...
 
-Or via gradle, go to https://jitpack.io/private#auth, get the auth token of the invited git account, add auth token to $HOME/.gradle/gradle.properties (jitAuthToken=jp_5...)
+Or via gradle:
 
 	allprojects {
 		repositories {
 			...
 			maven { 
 				url 'https://jitpack.io'
-				credentials { username jitAuthToken }
 			}
 		}
 	}
@@ -91,4 +90,20 @@ https://github.com/charge-partners/charge-and-partners/blob/master/link_partner_
 
 ## Who do I talk to? ##
 
-Mail questions regarding the android sdk please to roman@and-charge.me
+Mail questions regarding the android sdk please to andcharge.mobile@gmail.com
+
+## License ##
+
+Licensed under the Apache License 2.0
+
+	Licensed under the Apache License, Version 2.0 (the "License");
+	you may not use this file except in compliance with the License.
+	You may obtain a copy of the License at
+
+	    http://www.apache.org/licenses/LICENSE-2.0
+
+	Unless required by applicable law or agreed to in writing, software
+	distributed under the License is distributed on an "AS IS" BASIS,
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	See the License for the specific language governing permissions and
+	limitations under the License.
