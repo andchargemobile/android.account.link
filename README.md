@@ -3,7 +3,7 @@
 ## What is this repository for? ##
 
 * This sdk is meant to simplify the integration of account linking with &Charge on Android
-* Version 1.0.0
+* Version 1.0.1
 
 ## How do I get started? ##
 
@@ -21,7 +21,7 @@ Or via gradle:
 	}
     
     dependencies {
-	        implementation 'com.github.andchargemobile:android.account.link:1.0.0'
+	        implementation 'com.github.andchargemobile:android.account.link:1.0.1'
 	}
 	
 
