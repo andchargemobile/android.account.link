@@ -75,14 +75,14 @@ Or via gradle:
 
 ## The account linking flow: ##
 
-    1) Your backend initiates an account link and the result AccountLinkInit is passed to AccountLinkView
-    2) The sdk parses AccountLinkInit to a deep link for &Charge to handle
-    3) The sdk deep links into &Charge or opens a browser
-    4) &Charge completes the account link, it can be successful or some error occurs
-    5) &Charge deep links into your app with the url you defined in "How to set up" with extra params
-    6) You pass the intent to AccountLinkView
-    7) AccountLinkView parses: Intent -> AccountLinkResult
-    8) A fragment dialog is shown with the result
+1. Your backend initiates an account link and the result AccountLinkInit is passed to AccountLinkView
+2. The sdk parses AccountLinkInit to a deep link for &Charge to handle
+3. The sdk deep links into &Charge or opens a browser
+4. &Charge completes the account link, it can be successful or some error occurs
+5. &Charge deep links into your app with the url you defined in "How to set up" with extra params
+6. You pass the intent to AccountLinkView
+7. AccountLinkView parses: Intent -> AccountLinkResult
+8. A fragment dialog is shown with the result
 
 check for details on the data types etc:
 https://github.com/charge-partners/charge-and-partners/blob/master/link_partner_account.md
